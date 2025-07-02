@@ -1,0 +1,34 @@
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: Gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: ${USER_SERVICE_HOST}
+              uri: ${USER_SERVICE_URI}
+              predicates:
+                - Path=/api/users/**
+server:
+  port: 8080
+eureka:
+  instance:
+    prefer-ip-address: false
+  client:
+    serviceUrl:
+      defaultZone: http://${DISCOVERY_HOST}:${DISCOVERY_PORT}/eureka
+management:
+  endpoint:
+    gateway:
+      access: read_only
+  endpoints:
+    web:
+      exposure:
+        include: "*"

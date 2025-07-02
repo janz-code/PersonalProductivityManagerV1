@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: DiscoveryService
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: ppm-discovery-service  # Match Docker service name
+    prefer-ip-address: false         # Use hostname (not IP)
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      default-zone: http://localhost:${server.port}/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
