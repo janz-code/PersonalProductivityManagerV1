@@ -12,65 +12,7 @@ services:
       POSTGRES_DB: users
     volumes:
       - ppm-postgres-data:/var/lib/postgresql/data
-    networks:
-      - ppm-users
-  #--- SERVICES
-  ppm-discovery-service:
-    build:
-      context: DiscoveryService
-      dockerfile: Dockerfile
-    container_name: ppm-discovery-service
-    ports:
-      - "8761:8761"
-    depends_on:
-      - ppm-user-psql
-    restart: unless-stopped
-    networks:
-      - ppm-app
-  ppm-users-service:
-    build:
-      context: UserService
-      dockerfile: Dockerfile
-    container_name: ppm-users-service
-    ports:
-      - "8081:8081"
-    environment:
-      DB_HOST: ppm-user-psql
-      DB_NAME: users
-      DISCOVERY_HOST: ppm-discovery-service
-      DISCOVERY_PORT: 8761
-    depends_on:
-      - ppm-discovery-service
-      - ppm-user-psql
-    restart: unless-stopped
-    networks:
-      - ppm-app
-      - ppm-users
-  ppm-gateway:
-    build:
-      context: Gateway
-      dockerfile: Dockerfile
-    container_name: ppm-gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - ppm-discovery-service
-      - ppm-users-service
-    environment:
-      DISCOVERY_HOST: ppm-discovery-service
-      DISCOVERY_PORT: 8761
-      USER_SERVICE_HOST: ppm-users-service
-      USER_SERVICE_URI: lb://USERSERVICE
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
-      interval: 10s
-    networks:
-      - ppm-app
 
 volumes:
   ppm-postgres-data:
     driver: local
-networks:
-  ppm-users:
-  ppm-app:
