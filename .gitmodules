@@ -1,0 +1,3 @@
+[submodule "Tauri-PersonalProductivityManager"]
+	path = Tauri-PersonalProductivityManager
+	url = https://github.com/janz-code/Tauri-PersonalProductivityManager.git
